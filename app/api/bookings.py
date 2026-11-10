@@ -2,15 +2,20 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from app.db import get_session
-from app.models import Booking, Room
+from app.models import Booking, Room, User
 from app.schemas import BookingCreate, BookingRead
+from app.auth import get_current_user
 
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 
 @router.post("", response_model=BookingRead)
-async def create_booking(booking_in:BookingCreate, session: AsyncSession = Depends(get_session)):
+async def create_booking(
+        booking_in: BookingCreate, 
+        session: AsyncSession = Depends(get_session),
+        current_user: User = Depends(get_current_user),
+):
         room_check = await session.execute(
                 select(Room).where(
                         Room.id == booking_in.room_id

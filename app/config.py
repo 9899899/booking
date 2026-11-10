@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
 
-
+    SECRET_KEY: str = "super-secret-jwt-key-for-dev"
+    ALGORITHM: str = "HS256"
+    
     @property
     def DATABASE_URL(self) -> str:
         return (

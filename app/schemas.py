@@ -1,5 +1,21 @@
-from pydantic import BaseModel, Field, ConfigDict, model_validator
+from pydantic import BaseModel, Field, ConfigDict, model_validator, EmailStr
 from datetime import datetime
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=6)
+
+
+class UserRead(BaseModel):
+    id: int
+    email: EmailStr
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
 
 
 class RoomCreate(BaseModel):
@@ -17,7 +33,7 @@ class BookingCreate(BaseModel):
     room_id: int
     start_time: datetime
     end_time: datetime
-    client_contact: str
+    client_contact: EmailStr
 
     @model_validator(mode="after")
     def validate_booking_dates(self):

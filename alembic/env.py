@@ -2,7 +2,7 @@ import asyncio
 from logging.config import fileConfig
 from app.config import settings
 from app.db import Base
-from app.models import Room, Booking
+from app.models import Room, Booking, User
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
