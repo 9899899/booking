@@ -4,7 +4,7 @@ from datetime import datetime
 
 class RoomCreate(BaseModel):
     name: str = Field(min_length=1)
-    capacity: int = Field(ge=1)
+    capacity: int = Field(ge=1, description="Capacity must be greater than or equal to 1")
     description: str | None = None
 
 

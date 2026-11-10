@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from app.db import get_session
-from app.models import Booking
+from app.models import Booking, Room
 from app.schemas import BookingCreate, BookingRead
 
 
@@ -11,6 +11,17 @@ router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 @router.post("", response_model=BookingRead)
 async def create_booking(booking_in:BookingCreate, session: AsyncSession = Depends(get_session)):
+        room_check = await session.execute(
+                select(Room).where(
+                        Room.id == booking_in.room_id
+                )
+        )
+        if not room_check.scalars().first():
+                raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Room not found"
+                )
+        
         query = select(Booking).where(
                         and_(
                                 Booking.room_id == booking_in.room_id,
