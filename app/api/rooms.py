@@ -14,11 +14,11 @@ async def create_room(room_in: RoomCreate, session: AsyncSession = Depends(get_s
     new_room = Room(**room_in.model_dump())
     session.add(new_room)
     await session.commit()
-    await session.refresh()
+    await session.refresh(new_room)
     return new_room
 
 
 @router.get("", response_model=list[RoomRead])
-async def get_roomds(session: AsyncSession = Depends(get_session)):
+async def get_rooms(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Room))
     return result.scalars().all()
